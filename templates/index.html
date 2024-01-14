@@ -2,7 +2,6 @@
 
 {% block enfant %}
 
-
 <section class="dashboard">
     <div class="top">
         <i class="uil uil-bars sidebar-toggle"></i>
@@ -23,20 +22,20 @@
             </div>
 
             <div class="boxes">
+                <div class="box box3">
+                    <i class="uil uil-share"></i>
+                    <span class="text">Utilisateur</span>
+                    <span class="number">{{resultat1[0]}}</span>
+                </div>
                 <div class="box box1">
                     <i class="uil uil-thumbs-up"></i>
                     <span class="text">Total mise en vente</span>
-                    <span class="number">50,120</span>
+                    <span class="number">{{resultat4[0]}}</span>
                 </div>
                 <div class="box box2">
                     <i class="uil uil-comments"></i>
                     <span class="text">Total mise en location</span>
-                    <span class="number">20,120</span>
-                </div>
-                <div class="box box3">
-                    <i class="uil uil-share"></i>
-                    <span class="text">Service</span>
-                    <span class="number">10,120</span>
+                    <span class="number">{{resultat3[0]}}</span>
                 </div>
             </div>
         </div>
@@ -44,59 +43,91 @@
         <div class="activity">
             <div class="title">
                 <i class="uil uil-clock-three"></i>
-                <span class="text">Anononce mise en location recentes</span>
+                <span class="text"> Liste des utilisateurs</span>
             </div>
 
             <div class="activity-data">
                 <div class="data names">
-                    <span class="data-title">Name</span>
-                    <span class="data-list">Prem Shahi</span>
-                    <span class="data-list">Deepa Chand</span>
-                    <span class="data-list">Manisha Chand</span>
-                    <span class="data-list">Pratima Shahi</span>
-                    <span class="data-list">Man Shahi</span>
-                    <span class="data-list">Ganesh Chand</span>
-                    <span class="data-list">Bikash Chand</span>
+                    <span class="data-title">Id Utilisateur</span>
+                    {% for ligne in resultat %}
+                    <span class="data-list">{{ligne[0]}}</span>
+                    {% endfor %}
                 </div>
                 <div class="data email">
-                    <span class="data-title">Email</span>
-                    <span class="data-list">premshahi@gmail.com</span>
-                    <span class="data-list">deepachand@gmail.com</span>
-                    <span class="data-list">prakashhai@gmail.com</span>
-                    <span class="data-list">manishachand@gmail.com</span>
-                    <span class="data-list">pratimashhai@gmail.com</span>
-                    <span class="data-list">manshahi@gmail.com</span>
-                    <span class="data-list">ganeshchand@gmail.com</span>
+                    <span class="data-title">Nom et Prénom</span>
+                     {% for ligne in resultat %}
+                    <span class="data-list">{{ligne[1]}}</span>
+                    {% endfor %}
                 </div>
                 <div class="data joined">
-                    <span class="data-title">Joined</span>
-                    <span class="data-list">2022-02-12</span>
-                    <span class="data-list">2022-02-12</span>
-                    <span class="data-list">2022-02-13</span>
-                    <span class="data-list">2022-02-13</span>
-                    <span class="data-list">2022-02-14</span>
-                    <span class="data-list">2022-02-14</span>
-                    <span class="data-list">2022-02-15</span>
-                </div>
-                <div class="data type">
-                    <span class="data-title">Type</span>
-                    <span class="data-list">New</span>
-                    <span class="data-list">Member</span>
-                    <span class="data-list">Member</span>
-                    <span class="data-list">New</span>
-                    <span class="data-list">Member</span>
-                    <span class="data-list">New</span>
-                    <span class="data-list">Member</span>
+                    <span class="data-title">Email</span>
+                     {% for ligne in resultat %}
+                    <span class="data-list">{{ligne[2]}}</span>
+                    {% endfor %}
                 </div>
                 <div class="data status">
-                    <span class="data-title">Status</span>
-                    <span class="data-list">Liked</span>
-                    <span class="data-list">Liked</span>
-                    <span class="data-list">Liked</span>
-                    <span class="data-list">Liked</span>
-                    <span class="data-list">Liked</span>
-                    <span class="data-list">Liked</span>
-                    <span class="data-list">Liked</span>
+                    <span class="data-title">Adresse</span>
+                     {% for ligne in resultat %}
+                    <span class="data-list">{{ligne[4]}}</span>
+                    {% endfor %}
+                </div>
+                <div class="data status">
+                    <span class="data-title">Téléphone</span>
+                     {% for ligne in resultat %}
+                    <span class="data-list">{{ligne[5]}}</span>
+                    {% endfor %}
+                </div>
+                <div class="data status">
+                <a href="#" type="button" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="activity">
+            <div class="title">
+                <i class="uil uil-clock-three"></i>
+                <span class="text"> Mise en location recentes</span>
+            </div>
+
+            <div class="activity-data">
+                <div class="data names">
+                    <span class="data-title">IdLocation</span>
+                    {% for ligne in resultat2 %}
+                    <span class="data-list">{{ligne[0]}}</span>
+                    {% endfor %}
+                </div>
+                <div class="data email">
+                    <span class="data-title">Propriétaire</span>
+                     {% for ligne in resultat2 %}
+                    <span class="data-list">{{ligne[1]}}</span>
+                    {% endfor %}
+                </div>
+                <div class="data joined">
+                    <span class="data-title">Ville</span>
+                     {% for ligne in resultat2 %}
+                    <span class="data-list">{{ligne[2]}}</span>
+                    {% endfor %}
+                </div>
+                <div class="data status">
+                    <span class="data-title">Commune</span>
+                     {% for ligne in resultat2 %}
+                    <span class="data-list">{{ligne[3]}}</span>
+                    {% endfor %}
+                </div>
+                <div class="data status">
+                    <span class="data-title">Maison</span>
+                     {% for ligne in resultat2 %}
+                    <span class="data-list">{{ligne[4]}}</span>
+                    {% endfor %}
+                </div>
+                <div class="data status">
+                    <span class="data-title">Description</span>
+                     {% for ligne in resultat2 %}
+                    <span class="data-list">{{ligne[5]}}</span>
+                    {% endfor %}
+                </div>
+                <div class="data status">
+                    <a href="#" type="button" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
                 </div>
             </div>
         </div>
@@ -230,5 +261,4 @@
         </div>
     </div>
 </section>
-
 {% endblock %}

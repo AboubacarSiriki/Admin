@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block enfant %}
+
+<section class="dashboard">
+    <div class="top">
+        <i class="uil uil-bars sidebar-toggle"></i>
+
+        <div class="search-box">
+            <i class="uil uil-search"></i>
+            <input type="text" name="recherche" placeholder="Recherchez ici...">
+        </div>
+
+        <img src="images/profile.jpg" alt="">
+    </div>
+
+    <div class="dash-content">
+        <div class="overview">
+            <div class="title">
+                <i class="uil uil-tachometer-fast-alt"></i>
+                <span class="text">Tableau de bord</span>
+            </div>
+
+            <div class="boxes">
+                <div class="box box1">
+                    <i class="uil uil-thumbs-up"></i>
+                    <span class="text">Mise en vente</span>
+                    <span class="number">{{resultat1[0]}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="activity">
+            <div class="title">
+                <i class="uil uil-clock-three"></i>
+                <span class="text"> Mise en vente recentes</span>
+            </div>
+
+            <div class="activity-data">
+                <div class="data names">
+                    <span class="data-title">Id Vente</span>
+                    {% for ligne in resultat %}
+                    <span class="data-list">{{ligne[0]}}</span>
+                    {% endfor %}
+                </div>
+                <div class="data email">
+                    <span class="data-title">Propriétaire</span>
+                     {% for ligne in resultat %}
+                    <span class="data-list">{{ligne[1]}}</span>
+                    {% endfor %}
+                </div>
+                <div class="data joined">
+                    <span class="data-title">Ville</span>
+                     {% for ligne in resultat %}
+                    <span class="data-list">{{ligne[2]}}</span>
+                    {% endfor %}
+                </div>
+                <div class="data status">
+                    <span class="data-title">Commune</span>
+                     {% for ligne in resultat %}
+                    <span class="data-list">{{ligne[3]}}</span>
+                    {% endfor %}
+                </div>
+                <div class="data status">
+                    <span class="data-title">Maison</span>
+                     {% for ligne in resultat %}
+                    <span class="data-list">{{ligne[4]}}</span>
+                    {% endfor %}
+                </div>
+                <div class="data status">
+                    <span class="data-title">Description</span>
+                     {% for ligne in resultat %}
+                    <span class="data-list">{{ligne[5]}}</span>
+                    {% endfor %}
+                </div>
+                <div class="data status">
+                    <a href="#" type="button" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
