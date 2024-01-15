@@ -6,7 +6,7 @@
     <div class="top">
         <i class="uil uil-bars sidebar-toggle"></i>
 
-        <form method="post" action="/recherche_service" class="search-box">
+        <form method="post" action="/recherche_interesse" class="search-box">
         <div class="search-box">
             <i class="uil uil-search"></i>
             <input type="text" name="mot" placeholder="Recherchez ici...">
@@ -50,7 +50,7 @@
             <div class="boxes">
                 <div class="box box1">
                     <i class="uil uil-thumbs-up"></i>
-                    <span class="text">Service</span>
+                    <span class="text">Interessés location</span>
                     <span class="number">{{resultat1[0]}}</span>
                 </div>
             </div>
@@ -65,7 +65,7 @@
 
             <div class="activity-data">
                 <div class="data names">
-                    <span class="data-title">Id service</span>
+                    <span class="data-title">Id interessé</span>
                     {% for ligne in results %}
                     <span class="data-list">{{ligne[0]}}</span>
                     {% endfor %}
@@ -116,30 +116,30 @@
         <div class="activity">
             <div class="title">
                 <i class="uil uil-clock-three"></i>
-                <span class="text"> Service demandés</span>
+                <span class="text"> Liste des intéressés location</span>
             </div>
 
             <div class="activity-data">
                 <div class="data names">
-                    <span class="data-title">Id Service</span>
+                    <span class="data-title">Id Intéresse</span>
                     {% for ligne in resultat %}
                     <span class="data-list">{{ligne[0]}}</span>
                     {% endfor %}
                 </div>
                 <div class="data email">
-                    <span class="data-title">Intéressé </span>
+                    <span class="data-title">Nom </span>
                      {% for ligne in resultat %}
                     <span class="data-list">{{ligne[1]}}</span>
                     {% endfor %}
                 </div>
                 <div class="data joined">
-                    <span class="data-title">Service</span>
+                    <span class="data-title">Prénom</span>
                      {% for ligne in resultat %}
                     <span class="data-list">{{ligne[2]}}</span>
                     {% endfor %}
                 </div>
                 <div class="data status">
-                    <span class="data-title">Residence</span>
+                    <span class="data-title">Email</span>
                      {% for ligne in resultat %}
                     <span class="data-list">{{ligne[3]}}</span>
                     {% endfor %}
@@ -151,21 +151,15 @@
                     {% endfor %}
                 </div>
                 <div class="data status">
-                    <span class="data-title">Description</span>
+                    <span class="data-title">Commentaire</span>
                      {% for ligne in resultat %}
                     <span class="data-list">{{ligne[5]}}</span>
                     {% endfor %}
                 </div>
                 <div class="data status">
-                    <span class="data-title">Date</span>
+                    <span class="data-title">Id location</span>
                      {% for ligne in resultat %}
                     <span class="data-list">{{ligne[6]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data status">
-                    <span class="data-title">Statut</span>
-                     {% for ligne in resultat %}
-                    <span class="data-list">{{ligne[7]}}</span>
                     {% endfor %}
                 </div>
                 <div class="data status">

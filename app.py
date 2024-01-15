@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect, session
+from flask import Flask, render_template, url_for, request, redirect, session,jsonify
 import pyodbc
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_paginate import Pagination, get_page_parameter
@@ -131,7 +131,55 @@ def index():
     cursor.close()
     return render_template("index.html",resultat=resultat, resultat1=resultat1,resultat2=resultat2,resultat3=resultat3,resultat4=resultat4)
 
-@app.route("/location/")
+# Route pour la recherche asynchrone
+@app.route('/search', methods=['POST'])
+def search():
+    keyword = request.form['keyword']
+    results = search_in_database(keyword)
+    return jsonify(results)
+
+# Fonction de recherche dans la base de données
+# Fonction de recherche dans la base de données
+def search_in_database(mot):
+    connection = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
+    cursor = connection.cursor()
+    query = f"select idLocations,nom_et_prenoms,ville,commune,Type_de_maison,Descriptions from Locations join  Utilisateur on Locations.IdLocations=Utilisateur.IdUtilisateur WHERE commune LIKE ?"
+    result = cursor.execute(query, ('%' + mot + '%',)).fetchall()
+    return result
+
+@app.route("/recherche_location", methods=['GET', 'POST'])
+def recherche_location():
+    connection = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
+    cursor = connection.cursor()
+    cursor.execute("SELECT COUNT(*) from Locations")
+    resultat1 = cursor.fetchone()
+    cursor.close()
+    results = None
+    if request.method == 'POST':
+        keyword = request.form['keyword']
+        results = search_in_database(keyword)
+    return render_template("recherche_location.html",resultat1=resultat1,results=results)
+
+def search_in_database_user(mot):
+    connection = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
+    cursor = connection.cursor()
+    query = f"SELECT * from Utilisateur WHERE nom_et_prenoms LIKE ?"
+    result = cursor.execute(query, ('%' + mot + '%',)).fetchall()
+    return result
+@app.route("/recherche_utilisateur", methods=['GET', 'POST'])
+def recherche_utilisateur():
+    connection = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
+    cursor = connection.cursor()
+    cursor.execute("SELECT COUNT(*) from Utilisateur")
+    resultat1 = cursor.fetchone()
+    cursor.close()
+    results = None
+    if request.method == 'POST':
+        mot = request.form['mot']
+        results = search_in_database_user(mot)
+    return render_template("recherche_utilisateur.html",resultat1=resultat1,results=results)
+
+@app.route("/location", methods=['GET', 'POST'])
 def location():
     connection = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
     cursor = connection.cursor()
@@ -159,10 +207,19 @@ def maison_en_vente():
     return render_template("vente.html", resultat=resultat, resultat1=resultat1)
 
 @app.route("/service/")
-def liste_service():
-    return render_template("service.html")
+def service():
+    connection = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
+    cursor = connection.cursor()
+    cursor.execute("SELECT * from Services_demande")
+    resultat = cursor.fetchall()
+    cursor.close()
+    cursor = connection.cursor()
+    cursor.execute("SELECT COUNT(*) from Services_demande")
+    resultat1 = cursor.fetchone()
+    cursor.close()
+    return render_template("service.html", resultat=resultat, resultat1=resultat1)
 
-@app.route("/utilisateur/")
+@app.route("/utilisateur", methods=['GET', 'POST'])
 def utilisateur():
     connection = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
     cursor = connection.cursor()
@@ -179,13 +236,21 @@ def utilisateur():
 def supprimer_utisateur():
     return render_template("index.html")
 
+@app.route("/interesse/")
+def interesse():
+    connection = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
+    cursor = connection.cursor()
+    cursor.execute("SELECT * from interesse")
+    resultat = cursor.fetchall()
+    cursor.close()
+    cursor = connection.cursor()
+    cursor.execute("SELECT COUNT(*) from interesse")
+    resultat1 = cursor.fetchone()
+    cursor.close()
+    return render_template("interesse.html", resultat=resultat, resultat1=resultat1)
+
 @app.route("/supprimer_service/")
 def supprimer_service():
-    return render_template("index.html")
-
-@app.route("/recherche", methods=['GET', 'POST'])
-def recherche():
-
     return render_template("index.html")
 
 if __name__ == "__main__":

@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS Administrateur
 CREATE TABLE Administrateur (
 IdAdministrateur  INT NOT NULL PRIMARY KEY IDENTITY(1,1),
 Nom_et_prenoms VARCHAR(500),
+Email VARCHAR(500),
 Mot_de_pass VARCHAR(200),
 Telephone VARCHAR(200)
 )
@@ -56,19 +57,29 @@ FOREIGN KEY (IdUtilisateur) REFERENCES Utilisateur (IdUtilisateur),
 )
 
 
-DROP TABLE IF EXISTS Servives
-CREATE TABLE Servives (
-IdServives INT NOT NULL PRIMARY KEY IDENTITY(1,1),
-Type_de_services VARCHAR(200),
-Ville VARCHAR(200),
-Commune VARCHAR(200),
-Descriptions VARCHAR(200),
-Dates date,
-Statut_servives VARCHAR(200),
-GPS VARCHAR(200),
-IdUtilisateur INT NOT NULL,
-FOREIGN KEY (IdUtilisateur) REFERENCES Utilisateur (IdUtilisateur),
-)
+DROP TABLE IF EXISTS Services_demande;
+CREATE TABLE Services_demande (
+    IdServices_demande INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    nom_et_prenom VARCHAR(200),
+    Type_de_services VARCHAR(200),
+    lieu_debitation VARCHAR(200),
+    telephonne VARCHAR(200),
+    Descriptions VARCHAR(200),
+    Dates DATETIME,
+    Statut_services VARCHAR(200),
+);
+
+DROP TABLE IF EXISTS interesse;
+CREATE TABLE interesse (
+    IdServices_demande INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    nom VARCHAR(200),
+    prenom VARCHAR(200),
+    Email VARCHAR(200),
+    telephonne VARCHAR(200),
+    Descriptions VARCHAR(200),
+    IdLocations INT NOT NULL,
+    FOREIGN KEY (IdLocations) REFERENCES Locations (IdLocations),
+);
 
 DROP TABLE IF EXISTS Vendu
 CREATE TABLE Vendu (
