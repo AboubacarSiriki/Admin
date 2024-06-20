@@ -8,9 +8,16 @@
     
     <!----======== CSS ======== -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" id="main-styles-link">
-     
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}" id="main-styles-link">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" id="main-styles-link"> 
     <!----===== Iconscout CSS ===== -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
     <title>Admin Dashboard Panel</title> 
 </head>
@@ -21,8 +28,213 @@
     {% block enfant %} {% endblock %}
 
 
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/filtre.js') }}"></script>
+
+    <script>
+        let userChart, interactionChart, serviceChart, propertyChart;
+        let map;
+
+        function loadChart(type, chartId) {
+            fetch(`/api/data?type=${type}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error(data.error);
+                        return;
+                    }
+
+                    let labels = [], values = [], chartLabel = '', chartType = 'bar';
+
+                    if (type === 'utilisateurs_par_ville') {
+                        labels = data.map(item => item.Adresse);
+                        values = data.map(item => item.Nombre_utilisateurs);
+                        chartLabel = 'Nombre d\'utilisateurs';
+                    } else if (type === 'types_actions') {
+                        labels = data.map(item => item.type_action);
+                        values = data.map(item => item.Nombre_actions);
+                        chartLabel = 'Nombre d\'actions';
+                    } else if (type === 'popularite_proprietes') {
+                        labels = data.map(item => `${item.Type_propriete} ${item.IdPropriete}`);
+                        values = data.map(item => item.Nombre_likes);
+                        chartLabel = 'Nombre de likes';
+                    } else if (type === 'analyse_prix_maison') {
+                        labels = data.map(item => item.Type_propriete);
+                        values = data.map(item => item.Prix);
+                        chartLabel = 'Prix';
+                    } else if (type === 'analyse_prix_location') {
+                        labels = data.map(item => item.Type_propriete);
+                        values = data.map(item => item.Prix);
+                        chartLabel = 'Prix';
+                    } else if (type === 'location_populaires') {
+                        labels = data.map(item => `Location ${item.IdLocations}`);
+                        values = data.map(item => item.Nombre_likes);
+                        chartLabel = 'Nombre de likes';
+                    } else if (type === 'maisons_populaires') {
+                        labels = data.map(item => `Maison ${item.IdMaison}`);
+                        values = data.map(item => item.Nombre_likes);
+                        chartLabel = 'Nombre de likes';
+                    } else if (type === 'demande_services_par_type') {
+                        labels = data.map(item => item.Type_de_services);
+                        values = data.map(item => item.Nombre_demandes);
+                        chartLabel = 'Nombre de demandes';
+                    } else if (type === 'statut_services_demandes') {
+                        labels = data.map(item => item.Statut_services);
+                        values = data.map(item => item.Nombre_services);
+                        chartLabel = 'Nombre de services';
+                        chartType = 'pie';
+                        backgroundColors = ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)'];
+                    }
+
+                    let chartInstance;
+
+                    if (chartId === 'userChart') {
+                        if (userChart) userChart.destroy();
+                        chartInstance = new Chart(document.getElementById(chartId).getContext('2d'), {
+                            type: chartType,
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: chartLabel,
+                                    data: values,
+                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                        userChart = chartInstance;
+                    } else if (chartId === 'interactionChart') {
+                        if (interactionChart) interactionChart.destroy();
+                        chartInstance = new Chart(document.getElementById(chartId).getContext('2d'), {
+                            type: chartType,
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: chartLabel,
+                                    data: values,
+                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                        interactionChart = chartInstance;
+                    } else if (chartId === 'serviceChart') {
+                        if (serviceChart) serviceChart.destroy();
+                        chartInstance = new Chart(document.getElementById(chartId).getContext('2d'), {
+                            type: chartType,
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: chartLabel,
+                                    data: values,
+                                    backgroundColor: chartType === 'pie' ? backgroundColors : 'rgba(75, 192, 192, 0.2)',
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                        serviceChart = chartInstance;
+                    } else if (chartId === 'propertyChart') {
+                        if (propertyChart) propertyChart.destroy();
+                        chartInstance = new Chart(document.getElementById(chartId).getContext('2d'), {
+                            type: chartType,
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: chartLabel,
+                                    data: values,
+                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                        propertyChart = chartInstance;
+                    }
+                })
+                .catch(error => console.error('Error loading chart:', error));
+        }
+
+        function loadMap() {
+            fetch('/api/data?type=repartition_proprietes')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error('Error loading map:', data.error);
+                        return;
+                    }
+
+                    if (!map) {
+                        map = L.map('propertyMap').setView([7.539989, -5.547080], 7); // Coordonnées de la Côte d'Ivoire
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '&copy; OpenStreetMap contributors'
+                        }).addTo(map);
+                    }
+
+                    data.forEach(item => {
+                        if (item.GPS) {
+                            const coords = item.GPS.split(',').map(coord => parseFloat(coord.trim()));
+                            if (coords.length === 2 && !isNaN(coords[0]) && !isNaN(coords[1])) {
+                                // Créer un marqueur avec les coordonnées GPS
+                                L.marker([coords[0], coords[1]]).addTo(map)
+                                    .bindPopup(`<b>${item.Nombre_proprietes}</b><br>${item.Ville}, ${item.Commune}`);
+                            } else {
+                                console.warn('Invalid GPS coordinates for item:', item);
+                            }
+                        } else {
+                            console.warn('Missing GPS coordinates for item:', item);
+                        }
+                    });
+                })
+                .catch(error => console.error('Error loading map:', error));
+        }
+
+        window.onload = function() {
+            loadChart('utilisateurs_par_ville', 'userChart');
+            loadChart('maisons_populaires', 'interactionChart');
+            loadChart('demande_services_par_type', 'serviceChart');
+            loadMap();
+        };
+    </script>
+
 </body>
 
 </html>

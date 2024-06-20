@@ -13,7 +13,7 @@
             <button type="submit">Rechercher</button>
         </div>
     </form>
-    <script>
+    <!-- <script>
         $(document).ready(function(){
             $('#keyword').on('input', function(){
                 var keyword = $(this).val();
@@ -36,7 +36,7 @@
                 }
             });
         });
-    </script>
+    </script> -->
         <img src="images/profile.jpg" alt="">
     </div>
 
@@ -49,123 +49,69 @@
 
             <div class="boxes">
                 <div class="box box1">
-                    <i class="uil uil-thumbs-up"></i>
-                    <span class="text">Interessés location</span>
+                    <i class="fa-regular fa-lightbulb"></i>
+                    <span class="text">Interessés</span>
                     <span class="number">{{resultat1[0]}}</span>
                 </div>
-            </div>
-        </div>
-
-        {% if results %}
-        <div class="activity">
-            <div class="title">
-                <i class="uil uil-clock-three"></i>
-                <span class="text"> Résultats de la recherche pour "{{ request.form['mot'] }}" :</span>
-            </div>
-
-            <div class="activity-data">
-                <div class="data names">
-                    <span class="data-title">Id interessé</span>
-                    {% for ligne in results %}
-                    <span class="data-list">{{ligne[0]}}</span>
-                    {% endfor %}
+                <div class="box box1">
+                    <i class="fa-solid fa-building"></i>
+                    <span class="text">location </span>
+                    <span class="number">{{resultat2[0]}}</span>
                 </div>
-                <div class="data email">
-                    <span class="data-title">Nom </span>
-                     {% for ligne in results %}
-                    <span class="data-list">{{ligne[1]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data joined">
-                    <span class="data-title">Prénom</span>
-                     {% for ligne in results %}
-                    <span class="data-list">{{ligne[2]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data status">
-                    <span class="data-title">Email</span>
-                     {% for ligne in results %}
-                    <span class="data-list">{{ligne[3]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data status">
-                    <span class="data-title">Téléphone</span>
-                     {% for ligne in results %}
-                    <span class="data-list">{{ligne[4]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data status">
-                    <span class="data-title">Commentaire</span>
-                     {% for ligne in results %}
-                    <span class="data-list">{{ligne[5]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data status">
-                    <span class="data-title">Id location</span>
-                     {% for ligne in results %}
-                    <span class="data-list">{{ligne[6]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data status">
-                    <a href="#" type="button" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                <div class="box box1">
+                    <i class="fa-solid fa-house"></i>
+                    <span class="text">vente</span>
+                    <span class="number">{{resultat3[0]}}</span>
                 </div>
             </div>
         </div>
-    {% endif %}
+
 
         <div class="activity">
             <div class="title">
                 <i class="uil uil-clock-three"></i>
-                <span class="text"> Liste des intéressés location</span>
+                <span class="text">Liste des intéressés</span>
             </div>
-
-            <div class="activity-data">
-                <div class="data names">
-                    <span class="data-title">Id Intéresse</span>
+        
+            <table id="intéressésTable" class="table table-bordered table-striped" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>prenom</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                        <th>Id location</th>
+                        <th>Id vente</th>
+                        <th>vue</th>
+                    </tr>
+                </thead>
+                <tbody>
                     {% for ligne in resultat %}
-                    <span class="data-list">{{ligne[0]}}</span>
+                        <tr>
+                            <td>{{ ligne[0] }}</td>
+                            <td>{{ ligne[1] }}</td>
+                            <td>{{ ligne[2] }}</td>
+                            <td>{{ ligne[3] }}</td>
+                            <td>{{ ligne[5] }}</td>
+                            <td>{{ ligne[6] }}</td>
+                            <td>{{ ligne[7] }}</td>
+                            <td>
+                                {% if ligne[6] is not none %}
+                                    <a class="btn btn-sm btn-danger" href="{{ url_for('show_details', typea='location', id=ligne[6]) }}">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                {% elif ligne[7] is not none %}
+                                    <a class="btn btn-sm btn-danger" href="{{ url_for('show_details', typea='maison', id=ligne[7]) }}">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
                     {% endfor %}
-                </div>
-                <div class="data email">
-                    <span class="data-title">Nom </span>
-                     {% for ligne in resultat %}
-                    <span class="data-list">{{ligne[1]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data joined">
-                    <span class="data-title">Prénom</span>
-                     {% for ligne in resultat %}
-                    <span class="data-list">{{ligne[2]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data status">
-                    <span class="data-title">Email</span>
-                     {% for ligne in resultat %}
-                    <span class="data-list">{{ligne[3]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data status">
-                    <span class="data-title">Téléphone</span>
-                     {% for ligne in resultat %}
-                    <span class="data-list">{{ligne[4]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data status">
-                    <span class="data-title">Commentaire</span>
-                     {% for ligne in resultat %}
-                    <span class="data-list">{{ligne[5]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data status">
-                    <span class="data-title">Id location</span>
-                     {% for ligne in resultat %}
-                    <span class="data-list">{{ligne[6]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data status">
-                    <a href="#" type="button" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
-                </div>
-            </div>
+                </tbody>
+            </table>
+            
         </div>
     </div>
 </section>

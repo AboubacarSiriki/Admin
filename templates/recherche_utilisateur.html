@@ -13,30 +13,7 @@
             <button type="submit">Rechercher</button>
         </div>
     </form>
-    <script>
-        $(document).ready(function(){
-            $('#keyword').on('input', function(){
-                var keyword = $(this).val();
-                if (keyword.length >= 3) {
-                    $.ajax({
-                        url: '/search',
-                        method: 'POST',
-                        data: { keyword: keyword },
-                        success: function(data){
-                            var resultsHtml = '<ul>';
-                            data.forEach(function(result){
-                                resultsHtml += '<li>' + result + '</li>';
-                            });
-                            resultsHtml += '</ul>';
-                            $('#results').html(resultsHtml);
-                        }
-                    });
-                } else {
-                    $('#results').empty();
-                }
-            });
-        });
-    </script>
+
         <img src="images/profile.jpg" alt="">
     </div>
 
@@ -99,8 +76,44 @@
                 </div>
             </div>
         </div>
-    {% endif %}
-        </div>
+        {% endif %}
+
+        <table id="servicesTable" class="table table-bordered table-striped" style="width: 100%;">
+            <div class="filters row g-3">
+                <div class="col-auto"><input type="date" id="filterDate" class="form-control"></div>
+                <div class="col-auto"><input type="text" id="filterService" class="form-control" placeholder="type serrvice" ></div>
+                <div class="col-auto"><input type="text" id="filterLieu" class="form-control" placeholder="lieu"></div>
+                <div class="col-auto"><input type="text" id="filterStatut" class="form-control" placeholder="Statut"></div>       
+            </div>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nom et Prénom</th>
+                    <th>Email</th>
+                    <th>Adresse</th>
+                    <th>Téléphone</th>
+                    <th>action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ligne in resultat %}
+                    <tr>
+                        <td>{{ ligne[0] }}</td>
+                        <td>{{ ligne[1] }}</td>
+                        <td>{{ ligne[2] }}</td>
+                        <td>{{ ligne[3] }}</td>
+                        <td>{{ ligne[4] }}</td>
+                        <td>{{ ligne[5] }}</td>
+                        <td>{{ ligne[6] }}</td>
+                        <td>
+                            <a class="btn btn-sm btn-danger" href="" onclick="return confirm('vous  veux le licencier vraiment?')">
+                                <i class="fa-solid fa-person-walking-dashed-line-arrow-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </section>
 {% endblock %}

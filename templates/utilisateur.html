@@ -13,30 +13,6 @@
             <button type="submit">Rechercher</button>
         </div>
     </form>
-    <script>
-        $(document).ready(function(){
-            $('#keyword').on('input', function(){
-                var keyword = $(this).val();
-                if (keyword.length >= 3) {
-                    $.ajax({
-                        url: '/search',
-                        method: 'POST',
-                        data: { keyword: keyword },
-                        success: function(data){
-                            var resultsHtml = '<ul>';
-                            data.forEach(function(result){
-                                resultsHtml += '<li>' + result + '</li>';
-                            });
-                            resultsHtml += '</ul>';
-                            $('#results').html(resultsHtml);
-                        }
-                    });
-                } else {
-                    $('#results').empty();
-                }
-            });
-        });
-    </script>
         <img src="images/profile.jpg" alt="">
     </div>
 
@@ -56,93 +32,80 @@
             </div>
         </div>
 
-        {% if results %}
-        <div class="activity">
-            <div class="title">
-                <i class="uil uil-clock-three"></i>
-                <span class="text"> Résultats de la recherche pour "{{ request.form['mot'] }}" :</span>
-            </div>
-
-            <div class="activity-data">
-                <div class="data names">
-                    <span class="data-title">Id Utilisateur</span>
-                    {% for ligne in results %}
-                    <span class="data-list">{{ligne[0]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data email">
-                    <span class="data-title">Nom et Prénom</span>
-                     {% for ligne in results %}
-                    <span class="data-list">{{ligne[1]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data joined">
-                    <span class="data-title">Email</span>
-                     {% for ligne in results %}
-                    <span class="data-list">{{ligne[2]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data status">
-                    <span class="data-title">Adresse</span>
-                     {% for ligne in results %}
-                    <span class="data-list">{{ligne[4]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data status">
-                    <span class="data-title">Téléphone</span>
-                     {% for ligne in results %}
-                    <span class="data-list">{{ligne[5]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data status">
-                    <a href="#" type="button" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
-                </div>
-            </div>
-        </div>
-    {% endif %}
-
         <div class="activity">
             <div class="title">
                 <i class="uil uil-clock-three"></i>
                 <span class="text"> Liste des utilisateurs</span>
             </div>
-
-            <div class="activity-data">
-                <div class="data names">
-                    <span class="data-title">Id Utilisateur</span>
+            <table id="utilisateursTable" class="table table-bordered table-striped" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom et Prénom</th>
+                        <th>Email</th>
+                        <th>Adresse</th>
+                        <th>Téléphone</th>
+                        <th>action</th>
+                    </tr>
+                </thead>
+                <tbody>
                     {% for ligne in resultat %}
-                    <span class="data-list">{{ligne[0]}}</span>
+                        <tr>
+                            <td>{{ ligne[0] }}</td>
+                            <td>{{ ligne[1] }}</td>
+                            <td>{{ ligne[2] }}</td>
+                            <td>{{ ligne[4] }}</td>
+                            <td>{{ ligne[5] }}</td>
+                            <td>
+                                <a class="btn btn-sm btn-danger" href="" onclick="return confirm('vous  veux le licencier vraiment?')">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </a>
+                            </td>
+                        </tr>
                     {% endfor %}
-                </div>
-                <div class="data email">
-                    <span class="data-title">Nom et Prénom</span>
-                     {% for ligne in resultat %}
-                    <span class="data-list">{{ligne[1]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data joined">
-                    <span class="data-title">Email</span>
-                     {% for ligne in resultat %}
-                    <span class="data-list">{{ligne[2]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data status">
-                    <span class="data-title">Adresse</span>
-                     {% for ligne in resultat %}
-                    <span class="data-list">{{ligne[4]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data status">
-                    <span class="data-title">Téléphone</span>
-                     {% for ligne in resultat %}
-                    <span class="data-list">{{ligne[5]}}</span>
-                    {% endfor %}
-                </div>
-                <div class="data status">
-                    <a href="#" type="button" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
-                </div>
-            </div>
+                </tbody>
+            </table>
         </div>
     </div>
 </section>
 {% endblock %}
+
+
+
+
+
+
+
+<h1>Analyse des Données</h1>
+
+<!-- Analyse des Utilisateurs -->
+<h2>Analyse des Utilisateurs</h2>
+<button onclick="loadChart('utilisateurs_par_ville', 'userChart')">Distribution des Utilisateurs par Ville</button>
+<button onclick="loadChart('types_actions', 'userChart')">Types d'Actions les Plus Courantes</button>
+<canvas id="userChart" width="400" height="200"></canvas>
+
+<!-- Analyse des Interactions Utilisateur (user_like) -->
+<h2>Analyse des Interactions Utilisateur (user_like)</h2>
+
+<button onclick="loadChart('location_populaires', 'interactionChart')">Locations les Plus Appréciées</button>
+<button onclick="loadChart('maisons_populaires', 'interactionChart')">Maisons les Plus Appréciées</button>
+<canvas id="interactionChart" width="400" height="200"></canvas>
+
+
+
+<!-- Analyse des Propriétés (Maisons et Locations) -->
+<h2>Analyse des Propriétés (Maisons et Locations)</h2>
+<button onclick="loadChart('repartition_proprietes', 'propertyChart')">Répartition des Propriétés par Ville et Commune</button>
+<button onclick="loadChart('popularite_proprietes', 'propertyChart')">Popularité des Propriétés</button>
+<canvas id="propertyChart" width="400" height="200"></canvas>
+
+<!-- Analyse des Demandes de Services -->
+<h2>Analyse des Demandes de Services</h2>
+<button onclick="loadChart('demande_services_par_type', 'serviceChart')">Demande de Services par Type</button>
+<button onclick="loadChart('statut_services_demandes', 'serviceChart')">Statut des Services Demandés</button>
+<canvas id="serviceChart" width="400" height="200"></canvas>
+
+<h2>Analyse des prix de Propriétés (Maisons et Locations)</h2>
+<button onclick="loadChart('analyse_prix_maison', 'propertyprixChart')">Analyse des Prix des maison en vente</button>
+<button onclick="loadChart('analyse_prix_location', 'propertyprixChart')">Analyse des Prix des maison en location</button>
+<canvas id="propertyprixChart" width="400" height="200"></canvas>

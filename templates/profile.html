@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block enfant %}
+
+<section class="dashboard">
+    <div class="top">
+        <i class="uil uil-bars sidebar-toggle"></i>
+
+        <form method="post" action="/recherche_interesse" class="search-box">
+        <div class="search-box">
+            <i class="uil uil-search"></i>
+            <input type="text" name="mot" placeholder="Recherchez ici...">
+            <button type="submit">Rechercher</button>
+        </div>
+    </form>
+        <img src="/static/Images/profile.jpg" alt="">
+    </div>
+
+    <div class="dash-content">
+        {% if typea == 'location' %}
+            <section class="section novi-background section-md text-center">
+                <div class="main-wrapper">
+                    <div class="container">
+                        <div class="product-div">
+                            <div class="product-div-left">
+                                <div id="carouselExampleIndicators" class="carousel slide">
+                                    <div class="carousel-indicators">
+                                        {% for index in range(images|length) %}
+                                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ index }}" {% if index == 0 %}class="active"{% endif %}></button>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="carousel-inner">
+                                        {% for img in images %}
+                                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                            <img src="{{ url_for('get_image', filename=img) }}" class="d-block w-100" alt="{{ img }}">
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                </div>
+                                <div class="hover-container">
+                                    {% for img in images %}
+                                    <div><img src="{{ url_for('get_image', filename=img) }}"></div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="product-div-right text-start">
+                                <span class="product-name">Ville: {{ row.Ville }}<br>Commune: {{ row.Commune }}</span>
+                                <span class="product-price">Prix mensuel: {{ row.Prix_mensuel }}</span>
+                                <span class="product-price">Caution: {{ row.Caution }}</span>
+                                <span class="product-price">Avance: {{ row.Avance }}</span>
+                                <span class="product-price">Type de maison: {{ row.Type_de_maison }}</span>
+                                <span class="product-price">GPS: {{ row.GPS }}</span>
+                                <div class="product-rating">
+                                    <span><i class="fas fa-star"></i></span>
+                                    <span><i class="fas fa-star"></i></span>
+                                    <span><i class="fas fa-star"></i></span>
+                                    <span><i class="fas fa-star"></i></span>
+                                    <span><i class="fas fa-star-half-alt"></i></span>
+                                    <span>(350 ratings)</span>
+                                </div>
+                                <p class="product-description">{{ row.Descriptions }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        {% elif typea == 'maison' %}
+            <section class="section novi-background section-md text-center">
+                <div class="main-wrapper">
+                    <div class="container">
+                        <div class="product-div">
+                            <div class="product-div-left">
+                                <div id="carouselExampleIndicators" class="carousel slide">
+                                    <div class="carousel-indicators">
+                                        {% for index in range(images|length) %}
+                                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ index }}" {% if index == 0 %}class="active"{% endif %}></button>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="carousel-inner">
+                                        {% for img in images %}
+                                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                            <img src="{{ url_for('get_image', filename=img) }}" class="d-block w-100" alt="{{ img }}">
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                </div>
+                                <div class="hover-container">
+                                    {% for img in images %}
+                                    <div><img src="{{ url_for('get_image', filename=img) }}"></div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="product-div-right text-start">
+                                <span class="product-name">Ville: {{ row.Ville }}<br>Commune: {{ row.Commune }}</span>
+                                <span class="product-price">Nombre de pièces: {{ row.Nombre_de_pieces }}</span>
+                                <span class="product-price">Prix unitaire: {{ row.Prix_unitaire }}</span>
+                                <span class="product-price">Type de maison: {{ row.Type_de_maison }}</span>
+                                <span class="product-price">GPS: {{ row.GPS }}</span>
+                                <div class="product-rating">
+                                    <span><i class="fas fa-star"></i></span>
+                                    <span><i class="fas fa-star"></i></span>
+                                    <span><i class="fas fa-star"></i></span>
+                                    <span><i class="fas fa-star"></i></span>
+                                    <span><i class="fas fa-star-half-alt"></i></span>
+                                    <span>(350 ratings)</span>
+                                </div>
+                                <p class="product-description">{{ row.Descriptions }}</p>
+                                <div class="btn-groups">
+                                    <form class="row g-3 needs-validation" method="post">
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" id="validationCustom01" name="nom" placeholder="Nom" required>
+                                            <div class="valid-feedback">
+                                                Looks good!
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" id="validationCustom02" name="prenom" placeholder="Prénom" required>
+                                            <div class="valid-feedback">
+                                                Looks good!
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="validationCustomUsername" class="form-label">Email</label>
+                                            <div class="input-group has-validation">
+                                                <span class="input-group-text" id="inputGroupPrepend">@</span>
+                                                <input type="text" class="form-control" id="validationCustomUsername" placeholder="Email" name="email" aria-describedby="inputGroupPrepend" required>
+                                                <div class="invalid-feedback">
+                                                    Please choose a username.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="tel" class="form-control" id="validationCustom03" placeholder="Téléphone" name="telephonne" required>
+                                            <div class="invalid-feedback">
+                                                Please provide a valid city.
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <textarea class="form-control" id="validationTextarea" placeholder="Bonjour, je suis intéressé par [Villa duplex 5 pièces]" name="Descriptions" rows="3" required></textarea>
+                                            <div class="invalid-feedback">
+                                                Please enter a message in the textarea.
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <button class="btn btn-primary" type="submit">Soumettre</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
